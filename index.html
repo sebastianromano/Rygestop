@@ -66,6 +66,121 @@
             { days: 50, benefit: "Fantastisk! Din risiko for hjertesygdomme er halveret!" }
         ];
 
+        const SUSTAINABLE_BENEFITS = [
+            {
+                id: 1,
+                title: "Hjerte",
+                shortTerm: "20 min: Pulsen og blodtrykket falder",
+                longTerm: "3 mdr: Betydeligt forbedret blodcirkulation",
+                color: "text-red-600",
+                bgColor: "bg-red-50",
+                borderColor: "border-red-200",
+                activeColor: "bg-red-100"
+            },
+            {
+                id: 2,
+                title: "Lunger",
+                shortTerm: "72t: CO-niveau i blodet normaliseret",
+                longTerm: "6 mdr: Betydeligt mindre hoste og slim",
+                color: "text-blue-600",
+                bgColor: "bg-blue-50",
+                borderColor: "border-blue-200",
+                activeColor: "bg-blue-100"
+            },
+            {
+                id: 3,
+                title: "Hjerne",
+                shortTerm: "48t: Nikotin ude af kroppen",
+                longTerm: "3 mdr: Bedre søvn og koncentration",
+                color: "text-purple-600",
+                bgColor: "bg-purple-50",
+                borderColor: "border-purple-200",
+                activeColor: "bg-purple-100"
+            },
+            {
+                id: 4,
+                title: "Kondition",
+                shortTerm: "2 uger: Lettere at være fysisk aktiv",
+                longTerm: "3 mdr: Markant forbedret kondition",
+                color: "text-green-600",
+                bgColor: "bg-green-50",
+                borderColor: "border-green-200",
+                activeColor: "bg-green-100"
+            },
+            {
+                id: 5,
+                title: "Humør",
+                shortTerm: "1 uge: Begyndende stresslettelse",
+                longTerm: "2 mdr: Færre humørsvingninger",
+                color: "text-amber-600",
+                bgColor: "bg-amber-50",
+                borderColor: "border-amber-200",
+                activeColor: "bg-amber-100"
+            },
+            {
+                id: 6,
+                title: "Sanser",
+                shortTerm: "48t: Smags- og lugtesans forbedres",
+                longTerm: "1 mdr: Betydeligt forbedret smagssans",
+                color: "text-rose-600",
+                bgColor: "bg-rose-50",
+                borderColor: "border-rose-200",
+                activeColor: "bg-rose-100"
+            }
+        ];
+
+        function SustainableBenefits({ selectedBenefit, setSelectedBenefit }) {
+            return (
+                <div className="w-full bg-white rounded-lg p-4">
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {SUSTAINABLE_BENEFITS.map((benefit) => (
+                            <button
+                                key={benefit.id}
+                                onClick={() => setSelectedBenefit(selectedBenefit === benefit.id ? null : benefit.id)}
+                                className={`w-16 h-16 rounded-full
+                                   ${selectedBenefit === benefit.id ? benefit.activeColor : benefit.bgColor}
+                                   border ${benefit.borderColor}
+                                   flex flex-col items-center justify-center
+                                   transition-all duration-200 ease-in-out
+                                   hover:scale-105 focus:outline-none
+                                   focus:ring-2 focus:ring-offset-2 ${benefit.borderColor}`}
+                            >
+                                <span className={`text-xs font-medium ${benefit.color}`}>
+                                    {benefit.title}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="overflow-hidden transition-all duration-200 ease-in-out">
+                        {selectedBenefit && (
+                            <div className="mt-4 p-4 rounded-lg bg-gray-50 border border-gray-100">
+                                {SUSTAINABLE_BENEFITS.map((benefit) => (
+                                    benefit.id === selectedBenefit && (
+                                        <div key={benefit.id} className="space-y-2">
+                                            <h3 className={`font-medium ${benefit.color}`}>{benefit.title}</h3>
+                                            <div className="space-y-2 text-sm text-gray-600">
+                                                <div>
+                                                    <span className="font-medium">Kort sigt </span>
+                                                    <span className="text-gray-500">({benefit.shortTerm.split(":")[0]}): </span>
+                                                    {benefit.shortTerm.split(": ")[1]}
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium">Lang sigt </span>
+                                                    <span className="text-gray-500">({benefit.longTerm.split(":")[0]}): </span>
+                                                    {benefit.longTerm.split(": ")[1]}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
         function SimpleChart({ data, maxValue }) {
             const width = 600, height = 300, padding = 40;
             const chartWidth = width - (padding * 2);
@@ -117,6 +232,7 @@
         }
 
         function RygestopApp() {
+            const [selectedBenefit, setSelectedBenefit] = React.useState(null);
             const [data, setData] = React.useState(() => {
                 const saved = localStorage.getItem(STORAGE_KEY);
                 return saved ? JSON.parse(saved) : {
@@ -257,6 +373,11 @@
                                 <SimpleChart data={getChartData()} maxValue={INITIAL_DAILY_LIMIT} />
                             </div>
                         </div>
+                        
+                        <SustainableBenefits
+                            selectedBenefit={selectedBenefit}
+                            setSelectedBenefit={setSelectedBenefit}
+                        />
                     </div>
                 </div>
             );

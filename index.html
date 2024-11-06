@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="da">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rygestop App</title>
 
-    <!-- Favicon -->
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚭</text></svg>">
+    <!-- Simple Emoji Favicon - Works across platforms -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚭</text></svg>">
 
-    <!-- iOS Meta Tags & Icons -->
+    <!-- iOS Specific Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Rygestop">
-    <link rel="apple-touch-icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚭</text></svg>">
+
+    <!-- iOS Icons - Using PNG for better compatibility -->
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Fallback if icon.png is not available -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚭</text></svg>">
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="data:application/json,{
@@ -23,7 +24,12 @@
       &quot;short_name&quot;: &quot;Rygestop&quot;,
       &quot;display&quot;: &quot;standalone&quot;,
       &quot;background_color&quot;: &quot;#ffffff&quot;,
-      &quot;theme_color&quot;: &quot;#3b82f6&quot;
+      &quot;theme_color&quot;: &quot;#3b82f6&quot;,
+      &quot;icons&quot;: [{
+        &quot;src&quot;: &quot;icon.png&quot;,
+        &quot;sizes&quot;: &quot;192x192&quot;,
+        &quot;type&quot;: &quot;image/png&quot;
+      }]
     }">
 
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>

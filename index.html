@@ -21,6 +21,7 @@
         const PRICE_PER_PACK = 60;
         const CIGARETTES_PER_PACK = 20;
 
+        // Icons
         const MinusIcon = () => (
             <svg className="h-6 w-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="5" y1="12" x2="19" y2="12" />
@@ -31,6 +32,14 @@
             <svg className="h-6 w-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+        );
+
+        const ShareIcon = () => (
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" y1="2" x2="12" y2="15" />
             </svg>
         );
 
@@ -55,11 +64,11 @@
         );
 
         const BENEFITS = [
-            { days: 1, benefit: "Din puls og dit blodtryk er allerede blevet bedre!" },
-            { days: 2, benefit: "Du kan begynde at smage og lugte bedre!" },
-            { days: 3, benefit: "Din vejrtrækning bliver lettere dag for dag." },
+            { days: 2, benefit: "Din puls og dit blodtryk er allerede blevet bedre!" },
+            { days: 3, benefit: "Du kan begynde at smage og lugte bedre!" },
+            { days: 4, benefit: "Din vejrtrækning bliver lettere dag for dag." },
             { days: 5, benefit: "Det meste af nikotinen har forladt din krop." },
-            { days: 7, benefit: "Du har mere energi og hoster mindre." },
+            { days: 8, benefit: "Du har mere energi og hoster mindre." },
             { days: 14, benefit: "Din lungefunktion er betydeligt forbedret!" },
             { days: 21, benefit: "Din risiko for luftvejsinfektioner er reduceret!" },
             { days: 30, benefit: "Din hud ser sundere ud, og du føler dig yngre!" },
@@ -67,66 +76,12 @@
         ];
 
         const SUSTAINABLE_BENEFITS = [
-            {
-                id: 1,
-                title: "Hjerte",
-                shortTerm: "20 min: Pulsen og blodtrykket falder",
-                longTerm: "3 mdr: Betydeligt forbedret blodcirkulation",
-                color: "text-red-600",
-                bgColor: "bg-red-50",
-                borderColor: "border-red-200",
-                activeColor: "bg-red-100"
-            },
-            {
-                id: 2,
-                title: "Lunger",
-                shortTerm: "72t: CO-niveau i blodet normaliseret",
-                longTerm: "6 mdr: Betydeligt mindre hoste og slim",
-                color: "text-blue-600",
-                bgColor: "bg-blue-50",
-                borderColor: "border-blue-200",
-                activeColor: "bg-blue-100"
-            },
-            {
-                id: 3,
-                title: "Hjerne",
-                shortTerm: "48t: Nikotin ude af kroppen",
-                longTerm: "3 mdr: Bedre søvn og koncentration",
-                color: "text-purple-600",
-                bgColor: "bg-purple-50",
-                borderColor: "border-purple-200",
-                activeColor: "bg-purple-100"
-            },
-            {
-                id: 4,
-                title: "Kondition",
-                shortTerm: "2 uger: Lettere at være fysisk aktiv",
-                longTerm: "3 mdr: Markant forbedret kondition",
-                color: "text-green-600",
-                bgColor: "bg-green-50",
-                borderColor: "border-green-200",
-                activeColor: "bg-green-100"
-            },
-            {
-                id: 5,
-                title: "Humør",
-                shortTerm: "1 uge: Begyndende stresslettelse",
-                longTerm: "2 mdr: Færre humørsvingninger",
-                color: "text-amber-600",
-                bgColor: "bg-amber-50",
-                borderColor: "border-amber-200",
-                activeColor: "bg-amber-100"
-            },
-            {
-                id: 6,
-                title: "Sanser",
-                shortTerm: "48t: Smags- og lugtesans forbedres",
-                longTerm: "1 mdr: Betydeligt forbedret smagssans",
-                color: "text-rose-600",
-                bgColor: "bg-rose-50",
-                borderColor: "border-rose-200",
-                activeColor: "bg-rose-100"
-            }
+            { id: 1, title: "Hjerte", shortTerm: "20 min: Pulsen og blodtrykket falder", longTerm: "3 mdr: Betydeligt forbedret blodcirkulation", color: "text-red-600", bgColor: "bg-red-50", borderColor: "border-red-200", activeColor: "bg-red-100" },
+            { id: 2, title: "Lunger", shortTerm: "72t: CO-niveau i blodet normaliseret", longTerm: "6 mdr: Betydeligt mindre hoste og slim", color: "text-blue-600", bgColor: "bg-blue-50", borderColor: "border-blue-200", activeColor: "bg-blue-100" },
+            { id: 3, title: "Hjerne", shortTerm: "48t: Nikotin ude af kroppen", longTerm: "3 mdr: Bedre søvn og koncentration", color: "text-purple-600", bgColor: "bg-purple-50", borderColor: "border-purple-200", activeColor: "bg-purple-100" },
+            { id: 4, title: "Kondition", shortTerm: "2 uger: Lettere at være fysisk aktiv", longTerm: "3 mdr: Markant forbedret kondition", color: "text-green-600", bgColor: "bg-green-50", borderColor: "border-green-200", activeColor: "bg-green-100" },
+            { id: 5, title: "Humør", shortTerm: "1 uge: Begyndende stresslettelse", longTerm: "2 mdr: Færre humørsvingninger", color: "text-amber-600", bgColor: "bg-amber-50", borderColor: "border-amber-200", activeColor: "bg-amber-100" },
+            { id: 6, title: "Sanser", shortTerm: "48t: Smags- og lugtesans forbedres", longTerm: "1 mdr: Betydeligt forbedret smagssans", color: "text-rose-600", bgColor: "bg-rose-50", borderColor: "border-rose-200", activeColor: "bg-rose-100" }
         ];
 
         function SustainableBenefits({ selectedBenefit, setSelectedBenefit }) {
@@ -183,19 +138,17 @@
 
         function SimpleChart({ data, maxValue }) {
             const width = 600, height = 300, padding = 40;
-            const chartWidth = width - (padding * 2);
-            const chartHeight = height - (padding * 2);
+            const chartWidth = width - (padding * 2), chartHeight = height - (padding * 2);
             const xStep = chartWidth / (data.length - 1);
             const yScale = chartHeight / maxValue;
 
-            const generatePoints = (valueKey) => data.map((point, index) => ({
+            const generatePoints = valueKey => data.map((point, index) => ({
                 x: padding + (index * xStep),
                 y: height - padding - (point[valueKey] * yScale)
             }));
 
-            const createPath = (points) => points.map((point, index) =>
-                (index === 0 ? 'M' : 'L') + `${point.x},${point.y}`
-            ).join(' ');
+            const createPath = points => points.map((point, index) =>
+                (index === 0 ? 'M' : 'L') + `${point.x},${point.y}`).join(' ');
 
             const countPoints = generatePoints('count');
             const limitPoints = generatePoints('limit');
@@ -204,11 +157,9 @@
                 <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                     {[...Array(6)].map((_, i) => (
                         <g key={i}>
-                            <line
-                                x1={padding} y1={height - padding - (i * chartHeight / 5)}
+                            <line x1={padding} y1={height - padding - (i * chartHeight / 5)}
                                 x2={width - padding} y2={height - padding - (i * chartHeight / 5)}
-                                stroke="#e2e8f0" strokeDasharray="4 4"
-                            />
+                                stroke="#e2e8f0" strokeDasharray="4 4" />
                             <text x={padding - 10} y={height - padding - (i * chartHeight / 5)}
                                 className="text-xs fill-gray-500" textAnchor="end" alignmentBaseline="middle">
                                 {Math.round(i * maxValue / 5)}
@@ -221,8 +172,7 @@
                             {point.date}
                         </text>
                     ))}
-                    <path d={createPath(limitPoints)} fill="none" stroke="#94a3b8"
-                        strokeWidth="2" strokeDasharray="5 5" />
+                    <path d={createPath(limitPoints)} fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5 5" />
                     <path d={createPath(countPoints)} fill="none" stroke="#3b82f6" strokeWidth="2" />
                     {countPoints.map((point, i) => (
                         <circle key={i} cx={point.x} cy={point.y} r="4" fill="#3b82f6" />
@@ -246,17 +196,8 @@
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
             }, [data]);
 
-            const getDayNumber = () => {
-                const start = new Date(data.startDate);
-                const now = new Date();
-                return Math.ceil(Math.abs(now - start) / (1000 * 60 * 60 * 24));
-            };
-
-            const getDailyLimit = () => {
-                const dayNumber = getDayNumber();
-                return Math.max(0, INITIAL_DAILY_LIMIT - Math.floor(dayNumber * (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)));
-            };
-
+            const getDayNumber = () => Math.ceil(Math.abs(new Date() - new Date(data.startDate)) / (1000 * 60 * 60 * 24));
+            const getDailyLimit = () => Math.max(0, INITIAL_DAILY_LIMIT - Math.floor(getDayNumber() * (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)));
             const getTodayCount = () => {
                 const today = new Date().toISOString().split('T')[0];
                 return data.dailyData[today] || 0;
@@ -277,30 +218,50 @@
                 const dayNumber = getDayNumber();
                 const todayCount = getTodayCount();
                 const pricePerCig = PRICE_PER_PACK / CIGARETTES_PER_PACK;
-
                 const dailySaved = (PREVIOUS_DAILY_CONSUMPTION - todayCount) * pricePerCig;
                 const theoreticalCost = dayNumber * PREVIOUS_DAILY_CONSUMPTION * pricePerCig;
-
                 let actualTotalCigarettes = 0;
-                Object.values(data.dailyData).forEach(count => {
-                    actualTotalCigarettes += count;
-                });
+                Object.values(data.dailyData).forEach(count => { actualTotalCigarettes += count; });
                 const actualCost = actualTotalCigarettes * pricePerCig;
-
-                const totalSaved = theoreticalCost - actualCost;
-
                 return {
                     daily: Math.max(0, dailySaved).toFixed(0),
-                    total: Math.max(0, totalSaved).toFixed(0)
+                    total: Math.max(0, theoreticalCost - actualCost).toFixed(0)
                 };
             };
 
-            const getHealthBenefit = () => {
-                const dayNumber = getDayNumber();
-                return BENEFITS.filter(b => b.days <= dayNumber).pop()?.benefit ||
-                    "Start din rejse mod et sundere liv!";
+            const shareProgress = async () => {
+                const shareText = `📅 Dag ${getDayNumber()} af ${DAYS_TO_QUIT}
+🎯 I dag: ${getTodayCount()} (mål: < ${getDailyLimit()})
+💰 Sparet i alt: ${calculateSavings().total} kr`.trim();
+                if (navigator.share) {
+                    try {
+                        await navigator.share({ title: '🚭 Rygestop 🚭', text: shareText });
+                    } catch (error) {
+                        if (error.name !== 'AbortError') copyToClipboard(shareText);
+                    }
+                } else {
+                    copyToClipboard(shareText);
+                }
             };
 
+            const copyToClipboard = (text) => {
+                navigator.clipboard.writeText(text).then(() => {
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full text-sm shadow-lg';
+                    notification.textContent = 'Kopieret til udklipsholder';
+                    document.body.appendChild(notification);
+                    setTimeout(() => notification.remove(), 2000);
+                }).catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                });
+            };
+
+            const getHealthBenefit = () => BENEFITS.filter(b => b.days <= getDayNumber()).pop()?.benefit || "Start din rejse mod et sundere liv!";
             const getChartData = () => [...Array(7)].map((_, i) => {
                 const date = new Date();
                 date.setDate(date.getDate() - i);
@@ -308,8 +269,7 @@
                 return {
                     date: date.toLocaleDateString('da-DK', { weekday: 'short' }),
                     count: data.dailyData[dateStr] || 0,
-                    limit: Math.max(0, INITIAL_DAILY_LIMIT - Math.floor((getDayNumber() - i) *
-                        (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)))
+                    limit: Math.max(0, INITIAL_DAILY_LIMIT - Math.floor((getDayNumber() - i) * (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)))
                 };
             }).reverse();
 
@@ -326,20 +286,20 @@
                         <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
                             <div className="text-center">
                                 <p className="text-lg font-semibold text-gray-700">I dag</p>
-                                <div className="flex items-center justify-center space-x-4">
-                                    <button onClick={() => updateCount(-1)}
-                                        className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                                <div className="flex items-center justify-center space-x-4 my-4">
+                                    <button onClick={() => updateCount(-1)} className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                                         <MinusIcon />
                                     </button>
                                     <span className="text-3xl font-bold text-blue-600">{getTodayCount()}</span>
-                                    <button onClick={() => updateCount(1)}
-                                        className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                                    <button onClick={() => updateCount(1)} className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                                         <PlusIcon />
                                     </button>
                                 </div>
-                                <p className="text-sm text-gray-500 mt-2">
-                                    Dagens mål: {getDailyLimit()} eller mindre
-                                </p>
+                                <p className="text-sm text-gray-500 mb-4">Dagens mål: {getDailyLimit()} eller mindre</p>
+                                <button onClick={shareProgress} className="w-full flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    <ShareIcon />
+                                    <span className="font-medium">Del din fremgang</span>
+                                </button>
                             </div>
                         </div>
 
@@ -373,7 +333,7 @@
                                 <SimpleChart data={getChartData()} maxValue={INITIAL_DAILY_LIMIT} />
                             </div>
                         </div>
-                        
+
                         <SustainableBenefits
                             selectedBenefit={selectedBenefit}
                             setSelectedBenefit={setSelectedBenefit}
@@ -389,106 +349,106 @@
         // Admin Panel Code
         const style = document.createElement('style');
         style.textContent = `
-            #admin-trigger {
-                position: fixed;
-                top: 1rem;
-                right: 1rem;
-                z-index: 9999;
-                background: none;
-                border: none;
-                cursor: pointer;
-                opacity: 0.2;
-                transition: opacity 0.3s;
-                padding: 0.5rem;
-                font-size: 1.2rem;
-            }
-            #admin-trigger:hover {
-                opacity: 1;
-            }
-            #admin-panel {
-                position: fixed;
-                top: 3rem;
-                right: 1rem;
-                background: white;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                padding: 0.5rem;
-                display: none;
-                z-index: 9999;
-                min-width: 200px;
-            }
-            .admin-btn {
-                display: block;
-                width: 100%;
-                padding: 0.5rem 1rem;
-                margin: 0.25rem 0;
-                border: none;
-                background: none;
-                text-align: left;
-                cursor: pointer;
-                border-radius: 4px;
-            }
-            .admin-btn:hover {
-                background: #f0f0f0;
-            }
-            #admin-modal {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 10000;
-            }
-            .modal-content {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 1.5rem;
-                border-radius: 8px;
-                max-width: 400px;
-                width: 90%;
-            }
-            .modal-buttons {
-                margin-top: 1rem;
-                text-align: right;
-            }
-            .modal-btn {
-                padding: 0.5rem 1rem;
-                margin-left: 0.5rem;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .modal-btn.confirm {
-                background: #2563eb;
-                color: white;
-                border: none;
-            }
-            .modal-btn.cancel {
-                background: #e5e7eb;
-                border: none;
-            }
-        `;
+                #admin-trigger {
+                    position: fixed;
+                    top: 1rem;
+                    right: 1rem;
+                    z-index: 9999;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    opacity: 0.2;
+                    transition: opacity 0.3s;
+                    padding: 0.5rem;
+                    font-size: 1.2rem;
+                }
+                #admin-trigger:hover {
+                    opacity: 1;
+                }
+                #admin-panel {
+                    position: fixed;
+                    top: 3rem;
+                    right: 1rem;
+                    background: white;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    padding: 0.5rem;
+                    display: none;
+                    z-index: 9999;
+                    min-width: 200px;
+                }
+                .admin-btn {
+                    display: block;
+                    width: 100%;
+                    padding: 0.5rem 1rem;
+                    margin: 0.25rem 0;
+                    border: none;
+                    background: none;
+                    text-align: left;
+                    cursor: pointer;
+                    border-radius: 4px;
+                }
+                .admin-btn:hover {
+                    background: #f0f0f0;
+                }
+                #admin-modal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 10000;
+                }
+                .modal-content {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 1.5rem;
+                    border-radius: 8px;
+                    max-width: 400px;
+                    width: 90%;
+                }
+                .modal-buttons {
+                    margin-top: 1rem;
+                    text-align: right;
+                }
+                .modal-btn {
+                    padding: 0.5rem 1rem;
+                    margin-left: 0.5rem;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                .modal-btn.confirm {
+                    background: #2563eb;
+                    color: white;
+                    border: none;
+                }
+                .modal-btn.cancel {
+                    background: #e5e7eb;
+                    border: none;
+                }
+            `;
         document.head.appendChild(style);
 
         const adminHtml = `
-            <button id="admin-trigger">👤</button>
-            <div id="admin-panel"></div>
-            <div id="admin-modal">
-                <div class="modal-content">
-                    <h3 id="modal-title"></h3>
-                    <p id="modal-message"></p>
-                    <div class="modal-buttons">
-                        <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
-                        <button class="modal-btn confirm" id="modal-confirm">Continue</button>
+                <button id="admin-trigger">👤</button>
+                <div id="admin-panel"></div>
+                <div id="admin-modal">
+                    <div class="modal-content">
+                        <h3 id="modal-title"></h3>
+                        <p id="modal-message"></p>
+                        <div class="modal-buttons">
+                            <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                            <button class="modal-btn confirm" id="modal-confirm">Continue</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
 
         const adminContainer = document.createElement('div');
         adminContainer.innerHTML = adminHtml;

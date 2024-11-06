@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rygestop App</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const STORAGE_KEY = 'rygestop-data';
+        const INITIAL_DAILY_LIMIT = 5;
+        const DAYS_TO_QUIT = 50;
+        const PREVIOUS_DAILY_CONSUMPTION = 20;
+        const PRICE_PER_PACK = 60;
+        const CIGARETTES_PER_PACK = 20;
+
+        // Icons as components
+        const MinusIcon = () => (
+            <svg className="h-6 w-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+        );
+
+        const PlusIcon = () => (
+            <svg className="h-6 w-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+        );
+
+        const HeartIcon = () => (
+            <svg className="h-5 w-5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+        );
+
+        const WalletIcon = () => (
+            <svg className="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4h2v5h-2z" />
+                <path d="M3 7v12a2 2 0 0 0 2 2h16v-5" />
+            </svg>
+        );
+
+        const TrendingUpIcon = () => (
+            <svg className="h-5 w-5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+            </svg>
+        );
+
+        const BENEFITS = [
+            { days: 1, benefit: "Din puls og dit blodtryk er allerede blevet bedre!" },
+            { days: 2, benefit: "Du kan begynde at smage og lugte bedre!" },
+            { days: 3, benefit: "Din vejrtrækning bliver lettere dag for dag." },
+            { days: 5, benefit: "Det meste af nikotinen har forladt din krop." },
+            { days: 7, benefit: "Du har mere energi og hoster mindre." },
+            { days: 14, benefit: "Din lungefunktion er betydeligt forbedret!" },
+            { days: 21, benefit: "Din risiko for luftvejsinfektioner er reduceret!" },
+            { days: 30, benefit: "Din hud ser sundere ud, og du føler dig yngre!" },
+            { days: 50, benefit: "Fantastisk! Din risiko for hjertesygdomme er halveret!" }
+        ];
+
+        const ENCOURAGEMENTS = [
+            "Du er så sej! Tænk på den friske morgenluft! 🌅",
+            "Hver cigaret du springer over er en sejr! 💪",
+            "Din krop takker dig for denne beslutning! 💚",
+            "Tænk på hvor meget sundere du bliver! 🌱",
+            "Du er et forbillede for andre! ⭐️",
+            "Din familie er stolt af dig! 💝",
+            "Hvilken fantastisk beslutning du har taget! 🌟",
+            "Du bliver stærkere for hver dag! 💪",
+            "Mærk hvor meget lettere du kan trække vejret! 🌬️",
+            "Din udholdenhed er beundringsværdig! ⭐️"
+        ];
+
+        function SimpleChart({ data, maxValue }) {
+            const width = 600, height = 300, padding = 40;
+            const chartWidth = width - (padding * 2);
+            const chartHeight = height - (padding * 2);
+            const xStep = chartWidth / (data.length - 1);
+            const yScale = chartHeight / maxValue;
+
+            const generatePoints = (valueKey) => data.map((point, index) => ({
+                x: padding + (index * xStep),
+                y: height - padding - (point[valueKey] * yScale)
+            }));
+
+            const createPath = (points) => points.map((point, index) =>
+                (index === 0 ? 'M' : 'L') + `${point.x},${point.y}`
+            ).join(' ');
+
+            const countPoints = generatePoints('count');
+            const limitPoints = generatePoints('limit');
+
+            return (
+                <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+                    {[...Array(6)].map((_, i) => (
+                        <g key={i}>
+                            <line
+                                x1={padding} y1={height - padding - (i * chartHeight / 5)}
+                                x2={width - padding} y2={height - padding - (i * chartHeight / 5)}
+                                stroke="#e2e8f0" strokeDasharray="4 4"
+                            />
+                            <text x={padding - 10} y={height - padding - (i * chartHeight / 5)}
+                                className="text-xs fill-gray-500" textAnchor="end" alignmentBaseline="middle">
+                                {Math.round(i * maxValue / 5)}
+                            </text>
+                        </g>
+                    ))}
+                    {data.map((point, i) => (
+                        <text key={i} x={padding + (i * xStep)} y={height - padding + 20}
+                            className="text-xs fill-gray-500" textAnchor="middle">
+                            {point.date}
+                        </text>
+                    ))}
+                    <path d={createPath(limitPoints)} fill="none" stroke="#94a3b8"
+                        strokeWidth="2" strokeDasharray="5 5" />
+                    <path d={createPath(countPoints)} fill="none" stroke="#3b82f6" strokeWidth="2" />
+                    {countPoints.map((point, i) => (
+                        <circle key={i} cx={point.x} cy={point.y} r="4" fill="#3b82f6" />
+                    ))}
+                </svg>
+            );
+        }
+
+        function RygestopApp() {
+            const [data, setData] = React.useState(() => {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved ? JSON.parse(saved) : {
+                    startDate: new Date().toISOString(),
+                    dailyData: {},
+                    totalCigarettes: 0
+                };
+            });
+
+            React.useEffect(() => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }, [data]);
+
+            const getDayNumber = () => {
+                const start = new Date(data.startDate);
+                const now = new Date();
+                return Math.ceil(Math.abs(now - start) / (1000 * 60 * 60 * 24));
+            };
+
+            const getDailyLimit = () => {
+                const dayNumber = getDayNumber();
+                return Math.max(0, INITIAL_DAILY_LIMIT - Math.floor(dayNumber * (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)));
+            };
+
+            const getTodayCount = () => {
+                const today = new Date().toISOString().split('T')[0];
+                return data.dailyData[today] || 0;
+            };
+
+            const updateCount = (increment) => {
+                const today = new Date().toISOString().split('T')[0];
+                const currentCount = data.dailyData[today] || 0;
+                const newCount = Math.max(0, currentCount + increment);
+                setData(prev => ({
+                    ...prev,
+                    dailyData: { ...prev.dailyData, [today]: newCount },
+                    totalCigarettes: Math.max(0, prev.totalCigarettes + increment)
+                }));
+            };
+
+            const calculateSavings = () => {
+                const dayNumber = getDayNumber();
+                const todayCount = getTodayCount();
+                const pricePerCig = PRICE_PER_PACK / CIGARETTES_PER_PACK;
+                const dailySaved = (PREVIOUS_DAILY_CONSUMPTION - todayCount) * pricePerCig;
+                const totalSaved = dayNumber * PREVIOUS_DAILY_CONSUMPTION * pricePerCig - (data.totalCigarettes * pricePerCig);
+                return { daily: dailySaved.toFixed(0), total: totalSaved.toFixed(0) };
+            };
+
+            const getHealthBenefit = () => {
+                const dayNumber = getDayNumber();
+                return BENEFITS.filter(b => b.days <= dayNumber).pop()?.benefit ||
+                       "Start din rejse mod et sundere liv!";
+            };
+
+            const getChartData = () => [...Array(7)].map((_, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                return {
+                    date: date.toLocaleDateString('da-DK', { weekday: 'short' }),
+                    count: data.dailyData[dateStr] || 0,
+                    limit: Math.max(0, INITIAL_DAILY_LIMIT - Math.floor((getDayNumber() - i) *
+                           (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)))
+                };
+            }).reverse();
+
+            const savings = calculateSavings();
+
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 p-4">
+                    <div className="max-w-md mx-auto space-y-6">
+                        <div className="text-center">
+                            <h1 className="text-3xl font-bold text-blue-900 mb-2">Rygestop</h1>
+                            <p className="text-blue-600">Dag {getDayNumber()} af {DAYS_TO_QUIT}</p>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-lg space-y-4">
+                            <div className="text-center">
+                                <p className="text-lg font-semibold text-gray-700">I dag</p>
+                                <div className="flex items-center justify-center space-x-4">
+                                    <button onClick={() => updateCount(-1)}
+                                            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                                        <MinusIcon />
+                                    </button>
+                                    <span className="text-3xl font-bold text-blue-600">{getTodayCount()}</span>
+                                    <button onClick={() => updateCount(1)}
+                                            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                                        <PlusIcon />
+                                    </button>
+                                </div>
+                                <p className="text-sm text-gray-500 mt-2">
+                                    Dagens mål: {getDailyLimit()} eller mindre
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white rounded-xl p-4 shadow-lg">
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="font-semibold text-gray-700">I dag</p>
+                                    <WalletIcon />
+                                </div>
+                                <p className="text-2xl font-bold text-green-600">{savings.daily} kr</p>
+                            </div>
+                            <div className="bg-white rounded-xl p-4 shadow-lg">
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="font-semibold text-gray-700">Total</p>
+                                    <TrendingUpIcon />
+                                </div>
+                                <p className="text-2xl font-bold text-green-600">{savings.total} kr</p>
+                            </div>
+                        </div>
+
+                        <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+                            <div className="flex items-center gap-2">
+                                <HeartIcon />
+                                <p className="font-medium text-green-800">{getHealthBenefit()}</p>
+                            </div>
+                        </div>
+
+                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                            <p className="font-medium text-blue-800">
+                                {ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]}
+                            </p>
+                        </div>
+
+                        <div className="bg-white rounded-xl p-6 shadow-lg">
+                            <h2 className="text-lg font-semibold text-gray-700 mb-4">Din fremgang</h2>
+                            <div className="h-64">
+                                <SimpleChart data={getChartData()} maxValue={INITIAL_DAILY_LIMIT} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<RygestopApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>

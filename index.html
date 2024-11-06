@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="da">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
     <div id="root"></div>
     <script type="text/babel">
@@ -19,7 +21,6 @@
         const PRICE_PER_PACK = 60;
         const CIGARETTES_PER_PACK = 20;
 
-        // Icons as components
         const MinusIcon = () => (
             <svg className="h-6 w-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="5" y1="12" x2="19" y2="12" />
@@ -63,19 +64,6 @@
             { days: 21, benefit: "Din risiko for luftvejsinfektioner er reduceret!" },
             { days: 30, benefit: "Din hud ser sundere ud, og du føler dig yngre!" },
             { days: 50, benefit: "Fantastisk! Din risiko for hjertesygdomme er halveret!" }
-        ];
-
-        const ENCOURAGEMENTS = [
-            "Du er så sej! Tænk på den friske morgenluft! 🌅",
-            "Hver cigaret du springer over er en sejr! 💪",
-            "Din krop takker dig for denne beslutning! 💚",
-            "Tænk på hvor meget sundere du bliver! 🌱",
-            "Du er et forbillede for andre! ⭐️",
-            "Din familie er stolt af dig! 💝",
-            "Hvilken fantastisk beslutning du har taget! 🌟",
-            "Du bliver stærkere for hver dag! 💪",
-            "Mærk hvor meget lettere du kan trække vejret! 🌬️",
-            "Din udholdenhed er beundringsværdig! ⭐️"
         ];
 
         function SimpleChart({ data, maxValue }) {
@@ -173,15 +161,28 @@
                 const dayNumber = getDayNumber();
                 const todayCount = getTodayCount();
                 const pricePerCig = PRICE_PER_PACK / CIGARETTES_PER_PACK;
+
                 const dailySaved = (PREVIOUS_DAILY_CONSUMPTION - todayCount) * pricePerCig;
-                const totalSaved = dayNumber * PREVIOUS_DAILY_CONSUMPTION * pricePerCig - (data.totalCigarettes * pricePerCig);
-                return { daily: dailySaved.toFixed(0), total: totalSaved.toFixed(0) };
+                const theoreticalCost = dayNumber * PREVIOUS_DAILY_CONSUMPTION * pricePerCig;
+
+                let actualTotalCigarettes = 0;
+                Object.values(data.dailyData).forEach(count => {
+                    actualTotalCigarettes += count;
+                });
+                const actualCost = actualTotalCigarettes * pricePerCig;
+
+                const totalSaved = theoreticalCost - actualCost;
+
+                return {
+                    daily: Math.max(0, dailySaved).toFixed(0),
+                    total: Math.max(0, totalSaved).toFixed(0)
+                };
             };
 
             const getHealthBenefit = () => {
                 const dayNumber = getDayNumber();
                 return BENEFITS.filter(b => b.days <= dayNumber).pop()?.benefit ||
-                       "Start din rejse mod et sundere liv!";
+                    "Start din rejse mod et sundere liv!";
             };
 
             const getChartData = () => [...Array(7)].map((_, i) => {
@@ -192,7 +193,7 @@
                     date: date.toLocaleDateString('da-DK', { weekday: 'short' }),
                     count: data.dailyData[dateStr] || 0,
                     limit: Math.max(0, INITIAL_DAILY_LIMIT - Math.floor((getDayNumber() - i) *
-                           (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)))
+                        (INITIAL_DAILY_LIMIT / DAYS_TO_QUIT)))
                 };
             }).reverse();
 
@@ -211,12 +212,12 @@
                                 <p className="text-lg font-semibold text-gray-700">I dag</p>
                                 <div className="flex items-center justify-center space-x-4">
                                     <button onClick={() => updateCount(-1)}
-                                            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                                        className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
                                         <MinusIcon />
                                     </button>
                                     <span className="text-3xl font-bold text-blue-600">{getTodayCount()}</span>
                                     <button onClick={() => updateCount(1)}
-                                            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                                        className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
                                         <PlusIcon />
                                     </button>
                                 </div>
@@ -250,12 +251,6 @@
                             </div>
                         </div>
 
-                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                            <p className="font-medium text-blue-800">
-                                {ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]}
-                            </p>
-                        </div>
-
                         <div className="bg-white rounded-xl p-6 shadow-lg">
                             <h2 className="text-lg font-semibold text-gray-700 mb-4">Din fremgang</h2>
                             <div className="h-64">
@@ -269,6 +264,247 @@
 
         ReactDOM.render(<RygestopApp />, document.getElementById('root'));
     </script>
-    <script type="module" src="adminPanel.js"></script>
+    <script>
+        // Admin Panel Code
+        const style = document.createElement('style');
+        style.textContent = `
+            #admin-trigger {
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                z-index: 9999;
+                background: none;
+                border: none;
+                cursor: pointer;
+                opacity: 0.2;
+                transition: opacity 0.3s;
+                padding: 0.5rem;
+                font-size: 1.2rem;
+            }
+            #admin-trigger:hover {
+                opacity: 1;
+            }
+            #admin-panel {
+                position: fixed;
+                top: 3rem;
+                right: 1rem;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                padding: 0.5rem;
+                display: none;
+                z-index: 9999;
+                min-width: 200px;
+            }
+            .admin-btn {
+                display: block;
+                width: 100%;
+                padding: 0.5rem 1rem;
+                margin: 0.25rem 0;
+                border: none;
+                background: none;
+                text-align: left;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .admin-btn:hover {
+                background: #f0f0f0;
+            }
+            #admin-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 10000;
+            }
+            .modal-content {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                max-width: 400px;
+                width: 90%;
+            }
+            .modal-buttons {
+                margin-top: 1rem;
+                text-align: right;
+            }
+            .modal-btn {
+                padding: 0.5rem 1rem;
+                margin-left: 0.5rem;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            .modal-btn.confirm {
+                background: #2563eb;
+                color: white;
+                border: none;
+            }
+            .modal-btn.cancel {
+                background: #e5e7eb;
+                border: none;
+            }
+        `;
+        document.head.appendChild(style);
+
+        const adminHtml = `
+            <button id="admin-trigger">👤</button>
+            <div id="admin-panel"></div>
+            <div id="admin-modal">
+                <div class="modal-content">
+                    <h3 id="modal-title"></h3>
+                    <p id="modal-message"></p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                        <button class="modal-btn confirm" id="modal-confirm">Continue</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const adminContainer = document.createElement('div');
+        adminContainer.innerHTML = adminHtml;
+        document.body.appendChild(adminContainer);
+
+        function initAdminPanel() {
+            const adminTrigger = document.getElementById('admin-trigger');
+            const adminPanel = document.getElementById('admin-panel');
+            const modal = document.getElementById('admin-modal');
+
+            function simulateFutureDate() {
+                const currentOffset = parseInt(localStorage.getItem('timeOffset') || '0');
+                const oneDayMs = 24 * 60 * 60 * 1000;
+                const newOffset = currentOffset + oneDayMs;
+                localStorage.setItem('timeOffset', newOffset.toString());
+                window.location.reload();
+            }
+
+            function simulatePastDate() {
+                const currentOffset = parseInt(localStorage.getItem('timeOffset') || '0');
+                const oneDayMs = 24 * 60 * 60 * 1000;
+                const newOffset = currentOffset - oneDayMs;
+                localStorage.setItem('timeOffset', newOffset.toString());
+                window.location.reload();
+            }
+
+            function resetDateSimulation() {
+                localStorage.removeItem('timeOffset');
+                window.location.reload();
+            }
+
+            function clearStorage() {
+                localStorage.clear();
+                window.location.reload();
+            }
+
+            function toggleDebugMode() {
+                const current = localStorage.getItem('debugMode') === 'true';
+                localStorage.setItem('debugMode', (!current).toString());
+                window.location.reload();
+            }
+
+            const adminActions = [
+                {
+                    label: '⏰ Future Date (+1 day)',
+                    action: () => showConfirm('Simulate Future Date', 'Move time forward by 1 day?', simulateFutureDate)
+                },
+                {
+                    label: '📅 Past Date (-1 day)',
+                    action: () => showConfirm('Simulate Past Date', 'Move time backward by 1 day?', simulatePastDate)
+                },
+                {
+                    label: '🔄 Reset Date',
+                    action: () => showConfirm('Reset Date', 'Reset to current time?', resetDateSimulation)
+                },
+                {
+                    label: '🗑️ Clear Storage',
+                    action: () => showConfirm('Clear Storage', 'Clear all stored data?', clearStorage)
+                },
+                {
+                    label: '📊 View Storage',
+                    action: () => console.log('LocalStorage:', { ...localStorage })
+                },
+                {
+                    label: '🐛 Toggle Debug',
+                    action: toggleDebugMode
+                }
+            ];
+
+            adminActions.forEach(action => {
+                const button = document.createElement('button');
+                button.className = 'admin-btn';
+                button.textContent = action.label;
+                button.onclick = action.action;
+                adminPanel.appendChild(button);
+            });
+
+            adminTrigger.onclick = () => {
+                adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
+            };
+
+            document.addEventListener('click', (e) => {
+                if (!adminPanel.contains(e.target) && e.target !== adminTrigger) {
+                    adminPanel.style.display = 'none';
+                }
+            });
+
+            window.closeModal = function () {
+                modal.style.display = 'none';
+            }
+
+            function showConfirm(title, message, action) {
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-message').textContent = message;
+                document.getElementById('modal-confirm').onclick = () => {
+                    action();
+                    closeModal();
+                };
+                modal.style.display = 'block';
+            }
+        }
+
+        const timeOffset = localStorage.getItem('timeOffset');
+        if (timeOffset) {
+            const RealDate = Date;
+            const offset = parseInt(timeOffset);
+
+            Date = class extends RealDate {
+                constructor(...args) {
+                    if (args.length === 0) {
+                        super();
+                        this.setTime(this.getTime() + offset);
+                        return this;
+                    }
+                    return new RealDate(...args);
+                }
+
+                static now() {
+                    return new RealDate().getTime() + offset;
+                }
+            }
+
+            Date.parse = function (dateString) {
+                return RealDate.parse(dateString);
+            }
+
+            Date.UTC = function (...args) {
+                return RealDate.UTC(...args);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAdminPanel);
+        } else {
+            initAdminPanel();
+        }
+    </script>
 </body>
+
 </html>

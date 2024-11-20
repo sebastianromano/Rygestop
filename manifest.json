@@ -4,7 +4,7 @@
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-    "description": "An app to help you quit smoking",
+    "description": "En web applikation der kan hjælpe dig med at kvitte smøgerne",
     "icons": [
         {
             "src": "icon-192.png",
